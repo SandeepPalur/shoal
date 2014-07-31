@@ -473,10 +473,17 @@ class RabbitMQConsumer(Thread):
         # TODO: check to see if this is problem for natted squids. This loop may 
         # not be necessary
         for squid in self.shoal.values():
-           if squid.public_ip == public_ip:
+         if public_ip is not None:
+            if squid.public_ip == public_ip:
               squid.update(load)
               self.acknowledge_message(basic_deliver.delivery_tag)
               return
+         if private_ip is not None:
+            if squid.private_ip == private_ip:
+              squid.update(load)
+              self.acknowledge_message(basic_deliver.delivery_tag)
+              return
+
     
         # if there's a key in shoal, shoal's key will update with the load
         if key in self.shoal:
